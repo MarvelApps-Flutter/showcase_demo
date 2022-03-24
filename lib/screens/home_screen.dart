@@ -19,7 +19,6 @@ class HomeScreenPage extends StatefulWidget {
 
 class _MyHomeScreenPageState extends State<HomeScreenPage> {
   final referenceDatabase = FirebaseDatabase.instance.ref().child('Task Lists');
-  final movieController = TextEditingController();
   Query? query;
 
   void _init() async{
