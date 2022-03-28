@@ -24,14 +24,13 @@ class AddTaskScreen extends StatefulWidget {
 class _AddTaskScreenState extends State<AddTaskScreen>
     with InputValidationMixin {
   late AppConfig appC;
-  final formGlobalKey = GlobalKey<FormState>();
-  final TextEditingController _taskController = TextEditingController();
-  final TextEditingController _assigneeController = TextEditingController();
-  final TextEditingController _emailController = TextEditingController();
-  final TextEditingController _contactNumberController =
-      TextEditingController();
-  final TextEditingController _dueDateController = TextEditingController();
-  final referenceDatabase = FirebaseDatabase.instance;
+  GlobalKey<FormState>? formGlobalKey;
+  TextEditingController? _taskController;
+  TextEditingController? _assigneeController;
+  TextEditingController? _emailController;
+  TextEditingController? _contactNumberController;
+  TextEditingController? _dueDateController;
+  var referenceDatabase;
   var reference;
   Map<int, Color> color =
   {
@@ -50,10 +49,10 @@ class _AddTaskScreenState extends State<AddTaskScreen>
   DateTime _currentDate = DateTime.now();
   Future _selectDueDate(BuildContext context) async {
     final DateTime? picked = await showDatePicker(
-        context: context,
-        initialDate: _currentDate,
-        firstDate: DateTime(2021),
-        lastDate: DateTime(2025),
+      context: context,
+      initialDate: _currentDate,
+      firstDate: DateTime(2021),
+      lastDate: DateTime(2025),
       builder: (BuildContext? context, Widget? child) {
         return Theme(
           data: ThemeData.light().copyWith(
@@ -79,7 +78,7 @@ class _AddTaskScreenState extends State<AddTaskScreen>
   void formatDate() {
     final DateFormat formatter = DateFormat('dd/MMM/yyyy');
     final String formatted = formatter.format(_currentDate);
-    _dueDateController.value = TextEditingValue(text: formatted);
+    _dueDateController!.value = TextEditingValue(text: formatted);
   }
 
   Future<void> _sendAnalytics() async{
@@ -92,13 +91,25 @@ class _AddTaskScreenState extends State<AddTaskScreen>
 
   @override
   void initState() {
+    init();
+    super.initState();
+  }
+
+  init()
+  {
+    formGlobalKey = GlobalKey<FormState>();
+    _taskController = TextEditingController();
+    _assigneeController = TextEditingController();
+    _emailController = TextEditingController();
+    _contactNumberController = TextEditingController();
+    _dueDateController = TextEditingController();
+    referenceDatabase = FirebaseDatabase.instance;
     _setCurrentScreen();
     formatDate();
     reference = referenceDatabase.ref().child('Task Lists');
     if (widget.taskKey != null) {
       getTaskDetail();
     }
-    super.initState();
   }
 
   @override
@@ -151,24 +162,24 @@ class _AddTaskScreenState extends State<AddTaskScreen>
                 widget.isViewMode == false
                     ? buildButtonWidget(context,
                     widget.taskKey != null ? "UPDATE" : "CREATE", () {
-                      if (formGlobalKey.currentState!.validate()) {
+                      if (formGlobalKey!.currentState!.validate()) {
                         _sendAnalytics();
-                        if (_emailController.text
+                        if (_emailController!.text
                             .toString()
                             .trim()
                             .length !=
                             0 &&
-                            _taskController.text
+                            _taskController!.text
                                 .toString()
                                 .trim()
                                 .length !=
                                 0 &&
-                            _assigneeController.text
+                            _assigneeController!.text
                                 .toString()
                                 .trim()
                                 .length !=
                                 0 &&
-                            _contactNumberController.text
+                            _contactNumberController!.text
                                 .toString()
                                 .trim()
                                 .length !=
@@ -317,61 +328,61 @@ class _AddTaskScreenState extends State<AddTaskScreen>
   Widget buildDueDateTextField() {
     return widget.isViewMode == false
         ? TextFormField(
-            controller: _dueDateController,
-            onTap: () async {
-              await _selectDueDate(context);
-              FocusScope.of(context).requestFocus(FocusNode());
-            },
-            cursorColor: Colors.black,
-            autofocus: false,
-            readOnly: true,
-            keyboardType: TextInputType.text,
-            style: TextStyle(color: Colors.black.withOpacity(0.9)),
-            decoration: InputDecoration(
-              prefixIcon: const Icon(
-                Icons.calendar_today,
-                color: Colors.grey,
-              ),
-              labelText: "Enter Due Date",
-              labelStyle: TextStyle(color: Colors.grey.withOpacity(0.9)),
-              filled: true,
-              floatingLabelBehavior: FloatingLabelBehavior.never,
-              fillColor: Colors.grey.withOpacity(0.3),
-              border: const OutlineInputBorder(
-                  borderSide:
-                       BorderSide(width: 0, style: BorderStyle.none)),
-            ),
-          )
+      controller: _dueDateController,
+      onTap: () async {
+        await _selectDueDate(context);
+        FocusScope.of(context).requestFocus(FocusNode());
+      },
+      cursorColor: Colors.black,
+      autofocus: false,
+      readOnly: true,
+      keyboardType: TextInputType.text,
+      style: TextStyle(color: Colors.black.withOpacity(0.9)),
+      decoration: InputDecoration(
+        prefixIcon: const Icon(
+          Icons.calendar_today,
+          color: Colors.grey,
+        ),
+        labelText: "Enter Due Date",
+        labelStyle: TextStyle(color: Colors.grey.withOpacity(0.9)),
+        filled: true,
+        floatingLabelBehavior: FloatingLabelBehavior.never,
+        fillColor: Colors.grey.withOpacity(0.3),
+        border: const OutlineInputBorder(
+            borderSide:
+            BorderSide(width: 0, style: BorderStyle.none)),
+      ),
+    )
         : TextFormField(
-            controller: _dueDateController,
-            cursorColor: Colors.black,
-            readOnly: true,
-            keyboardType: TextInputType.text,
-            style: TextStyle(color: Colors.black.withOpacity(0.9)),
-            decoration: InputDecoration(
-              prefixIcon: const Icon(
-                Icons.calendar_today,
-                color: Colors.grey,
-              ),
-              labelText: "Enter Due Date",
-              labelStyle: TextStyle(color: Colors.grey.withOpacity(0.9)),
-              filled: true,
-              floatingLabelBehavior: FloatingLabelBehavior.never,
-              fillColor: Colors.grey.withOpacity(0.3),
-              border: const OutlineInputBorder(
-                  borderSide:
-                       BorderSide(width: 0, style: BorderStyle.none)),
-            ),
-          );
+      controller: _dueDateController,
+      cursorColor: Colors.black,
+      readOnly: true,
+      keyboardType: TextInputType.text,
+      style: TextStyle(color: Colors.black.withOpacity(0.9)),
+      decoration: InputDecoration(
+        prefixIcon: const Icon(
+          Icons.calendar_today,
+          color: Colors.grey,
+        ),
+        labelText: "Enter Due Date",
+        labelStyle: TextStyle(color: Colors.grey.withOpacity(0.9)),
+        filled: true,
+        floatingLabelBehavior: FloatingLabelBehavior.never,
+        fillColor: Colors.grey.withOpacity(0.3),
+        border: const OutlineInputBorder(
+            borderSide:
+            BorderSide(width: 0, style: BorderStyle.none)),
+      ),
+    );
   }
 
   void saveTask() {
     Map<String, String> data = {
-      "task_description": _taskController.text.toString().trim(),
-      "assignee": _assigneeController.text.toString().trim(),
-      "email": _emailController.text.toString().trim(),
-      "contact_number": _contactNumberController.text.toString().trim(),
-      "date": _dueDateController.text.toString().trim()
+      "task_description": _taskController!.text.toString().trim(),
+      "assignee": _assigneeController!.text.toString().trim(),
+      "email": _emailController!.text.toString().trim(),
+      "contact_number": _contactNumberController!.text.toString().trim(),
+      "date": _dueDateController!.text.toString().trim()
     };
 
     reference.push().set(data).then((value) {
@@ -382,20 +393,20 @@ class _AddTaskScreenState extends State<AddTaskScreen>
   getTaskDetail() async {
     DatabaseEvent snapshot = await reference!.child(widget.taskKey).once();
     Map taskData = snapshot.snapshot.value as Map;
-    _assigneeController.text = taskData['assignee'];
-    _contactNumberController.text = taskData['contact_number'];
-    _emailController.text = taskData['email'];
-    _taskController.text = taskData['task_description'];
-    _dueDateController.text = taskData['date'];
+    _assigneeController!.text = taskData['assignee'];
+    _contactNumberController!.text = taskData['contact_number'];
+    _emailController!.text = taskData['email'];
+    _taskController!.text = taskData['task_description'];
+    _dueDateController!.text = taskData['date'];
   }
 
   void updateTask() {
     Map<String, String> data = {
-      "task_description": _taskController.text.toString().trim(),
-      "assignee": _assigneeController.text.toString().trim(),
-      "email": _emailController.text.toString().trim(),
-      "contact_number": _contactNumberController.text.toString().trim(),
-      "date": _dueDateController.text.toString().trim()
+      "task_description": _taskController!.text.toString().trim(),
+      "assignee": _assigneeController!.text.toString().trim(),
+      "email": _emailController!.text.toString().trim(),
+      "contact_number": _contactNumberController!.text.toString().trim(),
+      "date": _dueDateController!.text.toString().trim()
     };
 
     reference!.child(widget.taskKey!).update(data).then((value) {
