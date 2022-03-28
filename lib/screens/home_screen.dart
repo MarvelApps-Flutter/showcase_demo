@@ -29,7 +29,7 @@ class _MyHomeScreenPageState extends State<HomeScreenPage> {
     query = FirebaseDatabase.instance
         .ref()
         .child(AppConstants.taskListsString)
-        .orderByChild(AppConstants.assignee);
+        .orderByChild(AppConstants.assigneeString);
   }
   @override
   void initState() {
@@ -55,7 +55,7 @@ class _MyHomeScreenPageState extends State<HomeScreenPage> {
         itemBuilder: (BuildContext context, DataSnapshot snapshot,
             Animation<double> animation, int index) {
           Map task = snapshot.value as Map;
-          task[AppConstants.key] = snapshot.key;
+          task[AppConstants.keyString] = snapshot.key;
           return buildItem(task: task);
         },
       ),
@@ -64,22 +64,22 @@ class _MyHomeScreenPageState extends State<HomeScreenPage> {
 
   Future<void> _sendAnalyticsForCreate() async {
     await widget.analytics!
-        .logEvent(name: AppConstants.addPopUp, parameters: {AppConstants.smallAddText: AppConstants.smallAddTaskString});
+        .logEvent(name: AppConstants.addPopUpString, parameters: {AppConstants.smallAddTextString: AppConstants.smallAddTaskString});
   }
 
   Future<void> _sendAnalyticsThroughView() async {
     await widget.analytics!
-        .logEvent(name: AppConstants.viewPopUp, parameters: {AppConstants.smallViewText: AppConstants.smallViewTaskString});
+        .logEvent(name: AppConstants.viewPopUpString, parameters: {AppConstants.smallViewTextString: AppConstants.smallViewTaskString});
   }
 
   Future<void> _sendAnalyticsThroughEdit() async {
     await widget.analytics!
-        .logEvent(name: AppConstants.editPopUp, parameters: {AppConstants.smallEditText: AppConstants.smallEditTaskString});
+        .logEvent(name: AppConstants.editPopUpString, parameters: {AppConstants.smallEditTextString: AppConstants.smallEditTaskString});
   }
 
   Future<void> _sendAnalyticsThroughDelete() async {
     await widget.analytics!
-        .logEvent(name: AppConstants.deletePopUp, parameters: {AppConstants.smallDeleteText: AppConstants.smallDeleteTaskString});
+        .logEvent(name: AppConstants.deletePopUpString, parameters: {AppConstants.smallDeleteTextString: AppConstants.smallDeleteTaskString});
   }
 
   Widget floatingActionButton() {
@@ -129,7 +129,7 @@ class _MyHomeScreenPageState extends State<HomeScreenPage> {
                       Radius.circular(10.0),
                     ),
                     image: DecorationImage(
-                        image: AssetImage(AppConstants.displayAssetImage),
+                        image: AssetImage(AppConstants.displayAssetImageString),
                         fit: BoxFit.fill)),
               ),
             ),
@@ -143,9 +143,9 @@ class _MyHomeScreenPageState extends State<HomeScreenPage> {
                     children: <Widget>[
                       Expanded(
                         child: Text(
-                          "${task![AppConstants.assignee]!}".replaceFirst(
-                              task[AppConstants.assignee][0],
-                              task[AppConstants.assignee][0].toUpperCase()),
+                          "${task![AppConstants.assigneeString]!}".replaceFirst(
+                              task[AppConstants.assigneeString][0],
+                              task[AppConstants.assigneeString][0].toUpperCase()),
                           style: AppTextStyles.boldColoredTextStyle,
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
@@ -159,7 +159,7 @@ class _MyHomeScreenPageState extends State<HomeScreenPage> {
                     children: <Widget>[
                       Expanded(
                         child: Text(
-                          "${task[AppConstants.contactNumber]!}",
+                          "${task[AppConstants.contactNumberString]!}",
                           style: AppTextStyles.lightTextStyle,
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
@@ -171,7 +171,7 @@ class _MyHomeScreenPageState extends State<HomeScreenPage> {
                     children: <Widget>[
                       Expanded(
                         child: Text(
-                          "${task[AppConstants.email]!}",
+                          "${task[AppConstants.emailString]!}",
                           style: AppTextStyles.lightTextStyle,
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
@@ -182,7 +182,7 @@ class _MyHomeScreenPageState extends State<HomeScreenPage> {
                   SizedBox(
                     width: 170,
                     child: Text(
-                      "${task[AppConstants.taskDescription]!}",
+                      "${task[AppConstants.taskDescriptionString]!}",
                       overflow: TextOverflow.ellipsis,
                       style: AppTextStyles.lightTextStyle,
                       maxLines: 1,
@@ -194,7 +194,7 @@ class _MyHomeScreenPageState extends State<HomeScreenPage> {
                       alignment: Alignment.bottomRight,
                       child: Row(
                         crossAxisAlignment: CrossAxisAlignment.end,
-                        children: [trapeziumClippers(context, task[AppConstants.date])],
+                        children: [trapeziumClippers(context, task[AppConstants.dateString])],
                       ),
                     ),
                   )
@@ -217,35 +217,35 @@ class _MyHomeScreenPageState extends State<HomeScreenPage> {
           child: Padding(
             padding: const EdgeInsets.only(right: 10.0),
             child: Image.asset(
-              AppConstants.bulletAssetImage,
+              AppConstants.bulletAssetImageString,
               height: 20,
               width: 24,
             ),
           ),
           onSelected: (choose) async {
-            if (choose == AppConstants.viewPopUp) {
+            if (choose == AppConstants.viewPopUpString) {
               _sendAnalyticsThroughView();
               Navigator.push(
                   context,
                   MaterialPageRoute(
                       builder: (_) => AddTaskScreen(
-                            taskKey: task![AppConstants.key],
+                            taskKey: task![AppConstants.keyString],
                             isViewMode: true,
                             analytics: widget.analytics,
                             observer: widget.observer,
                           )));
-            } else if (choose == AppConstants.editPopUp) {
+            } else if (choose == AppConstants.editPopUpString) {
               _sendAnalyticsThroughEdit();
               Navigator.push(
                   context,
                   MaterialPageRoute(
                       builder: (_) => AddTaskScreen(
-                            taskKey: task![AppConstants.key],
+                            taskKey: task![AppConstants.keyString],
                             isViewMode: false,
                             analytics: widget.analytics,
                             observer: widget.observer,
                           )));
-            } else if (choose == AppConstants.deletePopUp) {
+            } else if (choose == AppConstants.deletePopUpString) {
               _sendAnalyticsThroughDelete();
               _showDeleteDialog(contact: task);
             }
@@ -253,7 +253,7 @@ class _MyHomeScreenPageState extends State<HomeScreenPage> {
           itemBuilder: (context) {
             return <PopupMenuEntry<String>>[
               PopupMenuItem(
-                  value: AppConstants.viewPopUp,
+                  value: AppConstants.viewPopUpString,
                   child: Row(
                     children: const [
                       Padding(
@@ -263,11 +263,11 @@ class _MyHomeScreenPageState extends State<HomeScreenPage> {
                           size: 17,
                         ),
                       ),
-                      Text(AppConstants.viewPopUp)
+                      Text(AppConstants.viewPopUpString)
                     ],
                   )),
               PopupMenuItem(
-                  value: AppConstants.editPopUp,
+                  value: AppConstants.editPopUpString,
                   child: Row(
                     children: const [
                       Padding(
@@ -277,11 +277,11 @@ class _MyHomeScreenPageState extends State<HomeScreenPage> {
                           size: 17,
                         ),
                       ),
-                      Text(AppConstants.editPopUp)
+                      Text(AppConstants.editPopUpString)
                     ],
                   )),
               PopupMenuItem(
-                  value: AppConstants.deletePopUp,
+                  value: AppConstants.deletePopUpString,
                   child: Row(
                     children: const [
                       Padding(
@@ -291,7 +291,7 @@ class _MyHomeScreenPageState extends State<HomeScreenPage> {
                           size: 17,
                         ),
                       ),
-                      Text(AppConstants.deletePopUp)
+                      Text(AppConstants.deletePopUpString)
                     ],
                   ))
             ];
@@ -307,11 +307,11 @@ class _MyHomeScreenPageState extends State<HomeScreenPage> {
         builder: (context) {
           return AlertDialog(
             title: Text(
-              '${AppConstants.deleteText} ${contact![AppConstants.assignee]}',
+              '${AppConstants.deleteTextString} ${contact![AppConstants.assigneeString]}',
               style: AppTextStyles.mediumTextStyle,
             ),
             content: const Text(
-              AppConstants.deleteConfirmationMessage,
+              AppConstants.deleteConfirmationMessageString,
               style: AppTextStyles.lightTextStyle,
             ),
             actions: [
@@ -320,18 +320,18 @@ class _MyHomeScreenPageState extends State<HomeScreenPage> {
                     Navigator.pop(context);
                   },
                   child: const Text(
-                    AppConstants.cancelText,
+                    AppConstants.cancelTextString,
                     style: AppTextStyles.regularForSmallTextStyle,
                   )),
               TextButton(
                   onPressed: () {
                     referenceDatabase
-                        .child(contact[AppConstants.key])
+                        .child(contact[AppConstants.keyString])
                         .remove()
                         .whenComplete(() => Navigator.pop(context));
                   },
                   child: const Text(
-                    AppConstants.deleteText,
+                    AppConstants.deleteTextString,
                     style: AppTextStyles.regularForSmallTextStyle,
                   ))
             ],
@@ -345,7 +345,7 @@ class _MyHomeScreenPageState extends State<HomeScreenPage> {
       elevation: 0.0,
       centerTitle: true,
       title: const Text(
-        AppConstants.homeTitle,
+        AppConstants.homeTitleString,
         style: AppTextStyles.regularForLargeTextStyle,
       ),
       leading: IconButton(

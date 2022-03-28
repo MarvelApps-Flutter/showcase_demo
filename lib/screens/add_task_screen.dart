@@ -77,7 +77,7 @@ class _AddTaskScreenState extends State<AddTaskScreen>
   }
 
   void formatDate() {
-    final DateFormat formatter = DateFormat(AppConstants.dateFormat);
+    final DateFormat formatter = DateFormat(AppConstants.dateFormatString);
     final String formatted = formatter.format(_currentDate);
     _dueDateController!.value = TextEditingValue(text: formatted);
   }
@@ -135,7 +135,7 @@ class _AddTaskScreenState extends State<AddTaskScreen>
                   width: appC.rW(60),
                   decoration: const BoxDecoration(
                     image: DecorationImage(
-                      image: AssetImage(AppConstants.headerAssetImage),
+                      image: AssetImage(AppConstants.headerAssetImageString),
                       fit: BoxFit.fill,
                     ),
                   ),
@@ -385,11 +385,11 @@ class _AddTaskScreenState extends State<AddTaskScreen>
 
   void saveTask() {
     Map<String, String> data = {
-      AppConstants.taskDescription: _taskController!.text.toString().trim(),
-      AppConstants.assignee: _assigneeController!.text.toString().trim(),
-      AppConstants.email: _emailController!.text.toString().trim(),
-      AppConstants.contactNumber: _contactNumberController!.text.toString().trim(),
-      AppConstants.date : _dueDateController!.text.toString().trim()
+      AppConstants.taskDescriptionString: _taskController!.text.toString().trim(),
+      AppConstants.assigneeString: _assigneeController!.text.toString().trim(),
+      AppConstants.emailString: _emailController!.text.toString().trim(),
+      AppConstants.contactNumberString: _contactNumberController!.text.toString().trim(),
+      AppConstants.dateString : _dueDateController!.text.toString().trim()
     };
 
     reference.push().set(data).then((value) {
@@ -400,20 +400,20 @@ class _AddTaskScreenState extends State<AddTaskScreen>
   getTaskDetail() async {
     DatabaseEvent snapshot = await reference!.child(widget.taskKey).once();
     Map taskData = snapshot.snapshot.value as Map;
-    _assigneeController!.text = taskData[AppConstants.assignee];
-    _contactNumberController!.text = taskData[AppConstants.contactNumber];
-    _emailController!.text = taskData[AppConstants.email];
-    _taskController!.text = taskData[AppConstants.taskDescription];
-    _dueDateController!.text = taskData[AppConstants.date];
+    _assigneeController!.text = taskData[AppConstants.assigneeString];
+    _contactNumberController!.text = taskData[AppConstants.contactNumberString];
+    _emailController!.text = taskData[AppConstants.emailString];
+    _taskController!.text = taskData[AppConstants.taskDescriptionString];
+    _dueDateController!.text = taskData[AppConstants.dateString];
   }
 
   void updateTask() {
     Map<String, String> data = {
-      AppConstants.taskDescription: _taskController!.text.toString().trim(),
-      AppConstants.assignee: _assigneeController!.text.toString().trim(),
-      AppConstants.email : _emailController!.text.toString().trim(),
-      AppConstants.contactNumber: _contactNumberController!.text.toString().trim(),
-      AppConstants.date : _dueDateController!.text.toString().trim()
+      AppConstants.taskDescriptionString: _taskController!.text.toString().trim(),
+      AppConstants.assigneeString: _assigneeController!.text.toString().trim(),
+      AppConstants.emailString : _emailController!.text.toString().trim(),
+      AppConstants.contactNumberString: _contactNumberController!.text.toString().trim(),
+      AppConstants.dateString : _dueDateController!.text.toString().trim()
     };
 
     reference!.child(widget.taskKey!).update(data).then((value) {
