@@ -22,11 +22,10 @@ class _MyHomeScreenPageState extends State<HomeScreenPage> {
   var referenceDatabase;
   Query? query;
 
-  void _init() async{
-    referenceDatabase = FirebaseDatabase.instance.ref().child('Task Lists');
+  void init() async{
+    referenceDatabase = FirebaseDatabase.instance.ref().child(AppConstants.taskListsString);
     FirebaseMessaging.instance.getInitialMessage();
     var token = await FirebaseMessaging.instance.getToken();
-    print("token: " + token!);
     query = FirebaseDatabase.instance
         .ref()
         .child(AppConstants.taskListsString)
@@ -35,7 +34,7 @@ class _MyHomeScreenPageState extends State<HomeScreenPage> {
   @override
   void initState() {
     super.initState();
-    _init();
+    init();
   }
 
   @override

@@ -47,4 +47,5 @@ class AppConstants
   static const smallCreateString = "create";
   static const separatedAddTaskString = "Add Task";
   static const jointAddTaskString = "AddTask";
+  static const robotoTextStyleString = "Roboto";
 }
