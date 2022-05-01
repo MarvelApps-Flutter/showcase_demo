@@ -1,7 +1,5 @@
-import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_database/ui/firebase_animated_list.dart';
-import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:realtime_database_app/constants/app_constants.dart';
 import 'package:realtime_database_app/screens/add_task_screen.dart';
@@ -9,9 +7,9 @@ import 'package:realtime_database_app/utils/app_text_styles.dart';
 import 'package:realtime_database_app/utils/trapezium_clipper_decoration.dart';
 
 class HomeScreenPage extends StatefulWidget {
-  final FirebaseAnalytics? analytics;
-  final FirebaseAnalyticsObserver? observer;
-  const HomeScreenPage({Key? key, this.analytics, this.observer})
+
+  const HomeScreenPage({Key? key,
+  })
       : super(key: key);
 
   @override
@@ -28,8 +26,6 @@ class _MyHomeScreenPageState extends State<HomeScreenPage> {
         .child(AppConstants.taskListsString)
         .orderByChild(AppConstants.assigneeString);
     referenceDatabase = FirebaseDatabase.instance.ref().child(AppConstants.taskListsString);
-    FirebaseMessaging.instance.getInitialMessage();
-    var token = await FirebaseMessaging.instance.getToken();
 
   }
   @override
@@ -63,38 +59,15 @@ class _MyHomeScreenPageState extends State<HomeScreenPage> {
     );
   }
 
-  Future<void> _sendAnalyticsForCreate() async {
-    await widget.analytics!
-        .logEvent(name: AppConstants.addPopUpString, parameters: {AppConstants.smallAddTextString: AppConstants.smallAddTaskString});
-  }
-
-  Future<void> _sendAnalyticsThroughView() async {
-    await widget.analytics!
-        .logEvent(name: AppConstants.viewPopUpString, parameters: {AppConstants.smallViewTextString: AppConstants.smallViewTaskString});
-  }
-
-  Future<void> _sendAnalyticsThroughEdit() async {
-    await widget.analytics!
-        .logEvent(name: AppConstants.editPopUpString, parameters: {AppConstants.smallEditTextString: AppConstants.smallEditTaskString});
-  }
-
-  Future<void> _sendAnalyticsThroughDelete() async {
-    await widget.analytics!
-        .logEvent(name: AppConstants.deletePopUpString, parameters: {AppConstants.smallDeleteTextString: AppConstants.smallDeleteTaskString});
-  }
-
   Widget floatingActionButton() {
     return FloatingActionButton(
       backgroundColor: const Color(0xFF007cff),
       onPressed: () {
-        _sendAnalyticsForCreate();
         Navigator.push(
           context,
           MaterialPageRoute(builder: (_) {
             return AddTaskScreen(
               isViewMode: false,
-              analytics: widget.analytics,
-              observer: widget.observer,
             );
           }),
         );
@@ -225,29 +198,22 @@ class _MyHomeScreenPageState extends State<HomeScreenPage> {
           ),
           onSelected: (choose) async {
             if (choose == AppConstants.viewPopUpString) {
-              _sendAnalyticsThroughView();
               Navigator.push(
                   context,
                   MaterialPageRoute(
                       builder: (_) => AddTaskScreen(
                             taskKey: task![AppConstants.keyString],
                             isViewMode: true,
-                            analytics: widget.analytics,
-                            observer: widget.observer,
                           )));
             } else if (choose == AppConstants.editPopUpString) {
-              _sendAnalyticsThroughEdit();
               Navigator.push(
                   context,
                   MaterialPageRoute(
                       builder: (_) => AddTaskScreen(
                             taskKey: task![AppConstants.keyString],
                             isViewMode: false,
-                            analytics: widget.analytics,
-                            observer: widget.observer,
                           )));
             } else if (choose == AppConstants.deletePopUpString) {
-              _sendAnalyticsThroughDelete();
               _showDeleteDialog(contact: task);
             }
           },

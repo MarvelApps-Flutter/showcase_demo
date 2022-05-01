@@ -1,7 +1,4 @@
-import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_database/firebase_database.dart';
-import 'package:firebase_in_app_messaging/firebase_in_app_messaging.dart';
-import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:realtime_database_app/constants/app_constants.dart';
@@ -13,10 +10,9 @@ import 'package:realtime_database_app/utils/app_text_styles.dart';
 class AddTaskScreen extends StatefulWidget {
   final String? taskKey;
   final bool? isViewMode;
-  final FirebaseAnalytics? analytics;
-  final FirebaseAnalyticsObserver? observer;
   const AddTaskScreen(
-      {Key? key, this.taskKey, this.isViewMode, this.analytics, this.observer})
+      {Key? key, this.taskKey, this.isViewMode,
+      })
       : super(key: key);
 
   @override
@@ -82,16 +78,6 @@ class _AddTaskScreenState extends State<AddTaskScreen>
     _dueDateController!.value = TextEditingValue(text: formatted);
   }
 
-  Future<void> _sendAnalytics() async {
-    await widget.analytics!
-        .logEvent(name: AppConstants.camelCreateString, parameters: {AppConstants.smallCreateString: AppConstants.smallAddTaskString});
-  }
-
-  Future<void> _setCurrentScreen() async {
-    await widget.analytics!.setCurrentScreen(
-        screenName: AppConstants.separatedAddTaskString, screenClassOverride: AppConstants.jointAddTaskString);
-  }
-
   @override
   void initState() {
     init();
@@ -106,7 +92,6 @@ class _AddTaskScreenState extends State<AddTaskScreen>
     _contactNumberController = TextEditingController();
     _dueDateController = TextEditingController();
     referenceDatabase = FirebaseDatabase.instance;
-    _setCurrentScreen();
     formatDate();
     reference = referenceDatabase.ref().child(AppConstants.taskListsString);
     if (widget.taskKey != null) {
@@ -171,7 +156,6 @@ class _AddTaskScreenState extends State<AddTaskScreen>
                             ? AppConstants.capitalUpdateString
                             : AppConstants.capitalCreateString, () {
                         if (formGlobalKey!.currentState!.validate()) {
-                          _sendAnalytics();
                           if (_emailController!.text
                                       .toString()
                                       .trim()
@@ -196,9 +180,7 @@ class _AddTaskScreenState extends State<AddTaskScreen>
                               updateTask();
                             } else {
                               saveTask();
-                              FirebaseInAppMessaging.instance
-                                  .triggerEvent(AppConstants.customAddString);
-                              FirebaseMessaging.instance.getInitialMessage();
+
                             }
                           }
                         }
