@@ -315,13 +315,6 @@ class _MyHomeScreenPageState extends State<HomeScreenPage> {
         AppConstants.homeTitleString,
         style: AppTextStyles.regularForLargeTextStyle,
       ),
-      leading: IconButton(
-        padding: const EdgeInsets.only(left: 10),
-        onPressed: () {},
-        icon: const Icon(Icons.menu),
-        iconSize: 24,
-        color: Colors.black,
-      ),
     );
   }
 }

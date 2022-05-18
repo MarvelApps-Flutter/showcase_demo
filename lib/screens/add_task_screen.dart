@@ -102,7 +102,25 @@ class _AddTaskScreenState extends State<AddTaskScreen>
   @override
   Widget build(BuildContext context) {
     appC = AppConfig(context);
-    return Scaffold(backgroundColor: Colors.white, body: buildBody());
+    return Scaffold(backgroundColor: Colors.white,
+      appBar: buildAppBar(),
+     body: buildBody());
+  }
+
+   AppBar buildAppBar() {
+    return AppBar(
+      backgroundColor: Colors.white,
+      elevation: 0.0,
+      leading: IconButton(
+        padding: const EdgeInsets.only(left: 10),
+        onPressed: () {
+          Navigator.pop(context);
+        },
+        icon: const Icon(Icons.arrow_back_ios),
+        iconSize: 20,
+        color: Colors.black,
+      ),
+    );
   }
 
   Widget buildBody() {
@@ -111,7 +129,7 @@ class _AddTaskScreenState extends State<AddTaskScreen>
         child: Form(
           key: formGlobalKey,
           child: Padding(
-            padding: const EdgeInsets.all(12.0),
+            padding: const EdgeInsets.only(left:12.0, right: 12, bottom: 10),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
