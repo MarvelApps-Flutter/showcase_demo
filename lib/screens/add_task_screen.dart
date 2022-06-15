@@ -6,14 +6,16 @@ import 'package:realtime_database_app/mixins/validate_mixin.dart';
 import 'package:realtime_database_app/share/reusable_widgets.dart';
 import 'package:realtime_database_app/utils/app_config.dart';
 import 'package:realtime_database_app/utils/app_text_styles.dart';
+import '../constants/color_constants.dart';
 
 class AddTaskScreen extends StatefulWidget {
   final String? taskKey;
   final bool? isViewMode;
-  const AddTaskScreen(
-      {Key? key, this.taskKey, this.isViewMode,
-      })
-      : super(key: key);
+  const AddTaskScreen({
+    Key? key,
+    this.taskKey,
+    this.isViewMode,
+  }) : super(key: key);
 
   @override
   _AddTaskScreenState createState() => _AddTaskScreenState();
@@ -30,18 +32,6 @@ class _AddTaskScreenState extends State<AddTaskScreen>
   TextEditingController? _dueDateController;
   var referenceDatabase;
   var reference;
-  Map<int, Color> color = {
-    50: const Color(0xFF007cff),
-    100: const Color(0xFF007cff),
-    200: const Color(0xFF007cff),
-    300: const Color(0xFF007cff),
-    400: const Color(0xFF007cff),
-    500: const Color(0xFF007cff),
-    600: const Color(0xFF007cff),
-    700: const Color(0xFF007cff),
-    800: const Color(0xFF007cff),
-    900: const Color(0xFF007cff),
-  };
 
   DateTime _currentDate = DateTime.now();
   Future _selectDueDate(BuildContext context) async {
@@ -54,7 +44,7 @@ class _AddTaskScreenState extends State<AddTaskScreen>
         return Theme(
           data: ThemeData.light().copyWith(
             colorScheme: ColorScheme.fromSwatch(
-              primarySwatch: MaterialColor(0xFF007cff, color),
+              primarySwatch: MaterialColor(0xFF007cff, ColorConstants.color),
               primaryColorDark: const Color(0xFF007cff),
               accentColor: const Color(0xFF007cff),
             ),
@@ -102,15 +92,24 @@ class _AddTaskScreenState extends State<AddTaskScreen>
   @override
   Widget build(BuildContext context) {
     appC = AppConfig(context);
-    return Scaffold(backgroundColor: Colors.white,
-      appBar: buildAppBar(),
-     body: buildBody());
+    return Scaffold(
+        backgroundColor: Colors.white,
+        appBar: buildAppBar(),
+        body: buildBody());
   }
 
-   AppBar buildAppBar() {
+  AppBar buildAppBar() {
     return AppBar(
       backgroundColor: Colors.white,
       elevation: 0.0,
+      centerTitle: true,
+      title: Text(
+          (widget.isViewMode) == true
+              ? AppConstants.bigViewTaskString
+              : (widget.isViewMode == false && widget.taskKey != null)
+                  ? AppConstants.bigEditTaskString
+                  : AppConstants.bigCreateTaskString,
+          style: AppTextStyles.blackTextStyle),
       leading: IconButton(
         padding: const EdgeInsets.only(left: 10),
         onPressed: () {
@@ -125,89 +124,108 @@ class _AddTaskScreenState extends State<AddTaskScreen>
 
   Widget buildBody() {
     return SafeArea(
-      child: SingleChildScrollView(
-        child: Form(
-          key: formGlobalKey,
-          child: Padding(
-            padding: const EdgeInsets.only(left:12.0, right: 12, bottom: 10),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                Container(
-                  height: appC.rH(26),
-                  width: appC.rW(60),
-                  decoration: const BoxDecoration(
-                    image: DecorationImage(
-                      image: AssetImage(AppConstants.headerAssetImageString),
-                      fit: BoxFit.fill,
+      child: Stack(
+        children: [
+          Positioned.fill(
+            child: Form(
+              key: formGlobalKey,
+              child: Container(
+                height: MediaQuery.of(context).size.height,
+                child: Padding(
+                  padding: const EdgeInsets.only(left: 12.0, right: 12),
+                  child: SingleChildScrollView(
+                    child: Column(
+                      children: <Widget>[
+                        Container(
+                          height: appC.rH(22),
+                          width: appC.rW(50),
+                          decoration: const BoxDecoration(
+                            image: DecorationImage(
+                              image: AssetImage(
+                                  AppConstants.headerAssetImageString),
+                              fit: BoxFit.fill,
+                            ),
+                          ),
+                        ),
+                        buildSizedBoxWidget(10),
+                        const Text(
+                          AppConstants.enterDetailsString,
+                          style: AppTextStyles.lightTextStyle,
+                        ),
+                        SizedBox(
+                          height: 15,
+                        ),
+                        buildDueDateTextField(),
+                        SizedBox(
+                          height: 10,
+                        ),
+                        buildAssigneeTextField(),
+                        SizedBox(
+                          height: 10,
+                        ),
+                        buildEmailTextField(),
+                        SizedBox(
+                          height: 10,
+                        ),
+                        buildContactNumberTextField(),
+                        SizedBox(
+                          height: 10,
+                        ),
+                        buildTaskTextField(),
+                        SizedBox(
+                          height: 100,
+                        ),
+                      ],
                     ),
                   ),
                 ),
-                buildSizedBoxWidget(10),
-                Text(
-                    (widget.isViewMode) == true
-                        ? AppConstants.bigViewTaskString
-                        : (widget.isViewMode == false && widget.taskKey != null)
-                            ? AppConstants.bigEditTaskString
-                            : AppConstants.bigCreateTaskString,
-                    style: AppTextStyles.blackTextStyle),
-                buildSizedBoxWidget(13),
-                const Text(
-                  AppConstants.enterDetailsString,
-                  style: AppTextStyles.lightTextStyle,
-                ),
-                buildSizedBoxWidget(15),
-                buildDueDateTextField(),
-                buildSizedBoxWidget(10),
-                buildAssigneeTextField(),
-                buildSizedBoxWidget(10),
-                buildEmailTextField(),
-                buildSizedBoxWidget(10),
-                buildContactNumberTextField(),
-                buildSizedBoxWidget(10),
-                buildTaskTextField(),
-                buildSizedBoxWidget(15),
-                widget.isViewMode == false
-                    ? buildButtonWidget(
-                        context,
-                        widget.taskKey != null
-                            ? AppConstants.capitalUpdateString
-                            : AppConstants.capitalCreateString, () {
-                        if (formGlobalKey!.currentState!.validate()) {
-                          if (_emailController!.text
-                                      .toString()
-                                      .trim()
-                                      .length !=
-                                  0 &&
-                              _taskController!.text
-                                      .toString()
-                                      .trim()
-                                      .length !=
-                                  0 &&
-                              _assigneeController!.text
-                                      .toString()
-                                      .trim()
-                                      .length !=
-                                  0 &&
-                              _contactNumberController!.text
-                                      .toString()
-                                      .trim()
-                                      .length !=
-                                  0) {
-                            if (widget.taskKey != null) {
-                              updateTask();
-                            } else {
-                              saveTask();
-
-                            }
-                          }
-                        }
-                      })
-                    : Container(),
-              ],
+              ),
             ),
           ),
-        ),
+          Column(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [buildSaveOrUpdateButton()],
+          )
+        ],
+      ),
+    );
+  }
+
+  Widget buildSaveOrUpdateButton() {
+    return Container(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.end,
+        children: [
+          widget.isViewMode == false
+              ? Container(
+                  color: Colors.white,
+                  padding: const EdgeInsets.all(12),
+                  child: buildButtonWidget(
+                      context,
+                      widget.taskKey != null
+                          ? AppConstants.capitalUpdateString
+                          : AppConstants.capitalCreateString, () {
+                    if (formGlobalKey!.currentState!.validate()) {
+                      if (_emailController!.text.toString().trim().length !=
+                              0 &&
+                          _taskController!.text.toString().trim().length != 0 &&
+                          _assigneeController!.text.toString().trim().length !=
+                              0 &&
+                          _contactNumberController!.text
+                                  .toString()
+                                  .trim()
+                                  .length !=
+                              0) {
+                        if (widget.taskKey != null) {
+                          updateTask();
+                        } else {
+                          saveTask();
+                        }
+                      }
+                    }
+                  }))
+              : Container(),
+        ],
       ),
     );
   }
@@ -249,7 +267,7 @@ class _AddTaskScreenState extends State<AddTaskScreen>
       controller: _assigneeController,
       cursorColor: Colors.black,
       readOnly: widget.isViewMode == true ? true : false,
-      keyboardType: TextInputType.emailAddress,
+      keyboardType: TextInputType.text,
       style: TextStyle(color: Colors.black.withOpacity(0.9)),
       decoration: InputDecoration(
         prefixIcon: const Icon(
@@ -385,11 +403,13 @@ class _AddTaskScreenState extends State<AddTaskScreen>
 
   void saveTask() {
     Map<String, String> data = {
-      AppConstants.taskDescriptionString: _taskController!.text.toString().trim(),
+      AppConstants.taskDescriptionString:
+          _taskController!.text.toString().trim(),
       AppConstants.assigneeString: _assigneeController!.text.toString().trim(),
       AppConstants.emailString: _emailController!.text.toString().trim(),
-      AppConstants.contactNumberString: _contactNumberController!.text.toString().trim(),
-      AppConstants.dateString : _dueDateController!.text.toString().trim()
+      AppConstants.contactNumberString:
+          _contactNumberController!.text.toString().trim(),
+      AppConstants.dateString: _dueDateController!.text.toString().trim()
     };
 
     reference.push().set(data).then((value) {
@@ -409,11 +429,13 @@ class _AddTaskScreenState extends State<AddTaskScreen>
 
   void updateTask() {
     Map<String, String> data = {
-      AppConstants.taskDescriptionString: _taskController!.text.toString().trim(),
+      AppConstants.taskDescriptionString:
+          _taskController!.text.toString().trim(),
       AppConstants.assigneeString: _assigneeController!.text.toString().trim(),
-      AppConstants.emailString : _emailController!.text.toString().trim(),
-      AppConstants.contactNumberString: _contactNumberController!.text.toString().trim(),
-      AppConstants.dateString : _dueDateController!.text.toString().trim()
+      AppConstants.emailString: _emailController!.text.toString().trim(),
+      AppConstants.contactNumberString:
+          _contactNumberController!.text.toString().trim(),
+      AppConstants.dateString: _dueDateController!.text.toString().trim()
     };
 
     reference!.child(widget.taskKey!).update(data).then((value) {
