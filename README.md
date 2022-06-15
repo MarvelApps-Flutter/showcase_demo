@@ -1,4 +1,4 @@
-# Flutter firebase realtime database
+# Flutter Firebase Realtime Database
 A new flutter app for demonstrating Firebase Realtime Database CRUD Task
 
 # Android Screenshots
@@ -26,6 +26,7 @@ A new flutter app for demonstrating Firebase Realtime Database CRUD Task
     <td><img src="https://github.com/MarvelApps-Flutter/flutter_firebase_realtime_database/blob/dev/screenshots/android/android5.png" height="480px"></td>
   </tr>
  </table>
+
 
 # IOS Screenshots
 
