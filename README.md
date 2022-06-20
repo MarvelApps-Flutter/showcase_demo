@@ -1,5 +1,5 @@
 # Flutter Firebase Realtime Database
-A new flutter app for demonstrating Firebase Realtime Database CRUD Task
+A new flutter app for demonstrating Firebase Realtime Database CRUD Operations
 
 # Android Screenshots
 
