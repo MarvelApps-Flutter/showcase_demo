@@ -7,7 +7,7 @@ A new flutter app for demonstrating Firebase Realtime Database CRUD Task
   <tr>
     <td align="center" valign="center">Task Manager Dashboard</td>
      <td align="center" valign="center">View Task</td>
-     <td align="center" valign="center">Edit Task</td>
+     <td align="center" valign="center">Update Task</td>
   </tr>
   <tr>
     <td><img src="https://github.com/MarvelApps-Flutter/flutter_firebase_realtime_database/blob/dev/screenshots/android/android1.png" height="480px"></td>
@@ -45,7 +45,7 @@ A new flutter app for demonstrating Firebase Realtime Database CRUD Task
 
 <table>
   <tr>
-    <td align="center" valign="center">Edit Task</td>
+    <td align="center" valign="center">Update Task</td>
      <td align="center" valign="center">Delete Task</td>
   </tr>
   <tr>
