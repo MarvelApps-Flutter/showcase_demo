@@ -28,7 +28,7 @@ A new flutter app for demonstrating Firebase Realtime Database CRUD Operations
  </table>
 
 </br>
-</br>
+
 # IOS Screenshots
 
 <table>
