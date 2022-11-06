@@ -1,4 +1,8 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:showcaseview/showcaseview.dart';
 import '../constants/app_constants.dart';
 import 'home_screen.dart';
 
@@ -16,10 +20,11 @@ class SplashScreenState extends State<SplashScreen>
   late final Animation<double> _animation;
   late AnimationController delayedcontroller;
   late final Animation<double> _delayedAnimation;
-  
-  init()
-  {
-      controller = AnimationController(
+  // final GlobalKey _one = GlobalKey();
+  // BuildContext? myContext;
+  init() {
+   
+    controller = AnimationController(
       vsync: this,
       duration: const Duration(seconds: 2),
     )..forward();
@@ -42,23 +47,46 @@ class SplashScreenState extends State<SplashScreen>
   @override
   void initState() {
     super.initState();
-      init();
-      new Future.delayed(
-        const Duration(seconds: 3), () => Navigator.push(context, MaterialPageRoute(builder: (context)=> HomeScreenPage(
-      )
-    )));
+    init();
+    new Future.delayed(
+        const Duration(seconds: 3),
+        () => Navigator.push(context,
+            MaterialPageRoute(builder: (context) => HomeScreenPage())));
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        body: Stack(
-      children: [
-        _marvelAnimatedLogo(context),
-        _animatedText(context),
-        _footer()
-      ],
-    ));
+      body: ShowCaseWidget(
+        onStart: (index, key) {
+          log('onStart: $index, $key');
+        },
+        onComplete: (index, key) {
+          log('onComplete: $index, $key');
+          if (index == 4) {
+            SystemChrome.setSystemUIOverlayStyle(
+              SystemUiOverlayStyle.light.copyWith(
+                statusBarIconBrightness: Brightness.dark,
+                statusBarColor: Colors.white,
+              ),
+            );
+          }
+        },
+        blurValue: 1,
+        builder: Builder(
+          builder: (context) {
+            return Stack(
+              children: [
+                _marvelAnimatedLogo(context),
+                _animatedText(context),
+                _footer()
+              ],
+            );
+          },
+        ),
+        autoPlayDelay: const Duration(seconds: 3),
+      ),
+    );
   }
 
   Column _footer() {
